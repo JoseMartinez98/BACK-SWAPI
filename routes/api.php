@@ -2,30 +2,30 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NavesController;
+use App\Http\Controllers\PersonajesController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// Rutas para las naves
+// Route::get('/naves', [NavesController::class, 'getnaves']); 
+Route::get('/naves', [NavesController::class, 'index']); 
+Route::get('/allNaves', [NavesController::class, 'getNaves']); 
+Route::delete('naves/{id}', [NavesController::class, 'destroy']);
+Route::get('/naves/{id}', [NavesController::class, 'show']);
+Route::post('/importar-naves', function () {
+    Artisan::call('app:import-naves');
+    return response()->json(['message' => 'Importación iniciada'], 200);
+});
+Route::post('/naves/{id_naves}/piloto/{id_personajes}', [NavesController::class, 'addPilot']); 
+Route::delete('/naves/{id_naves}/piloto/{id_personajes}', [NavesController::class, 'removePilot']);
+
+// Rutas para los personajes
+Route::get('/personajes', [PersonajesController::class, 'index']); 
+Route::get('/allPersonajes', [PersonajesController::class, 'getPersonajes']); 
+Route::delete('personajes/{id}', [PersonajesController::class, 'destroy']);
+Route::post('/personajes/upload-image', [PersonajesController::class, 'uploadImage']);
+Route::post('/personajes', [PersonajesController::class, 'store']);
+Route::get('/personajes/{id}', [PersonajesController::class, 'show']);
 
 
-//Routes del modelo Naves
-Route::get('naves','App\Http\Controllers\NavesController@getNaves');
 
-Route::get('naves/{id}','App\Http\Controllers\NavesController@getNavesxid');
 
-Route::post('addNaves','App\Http\Controllers\NavesController@insertNaves');
-
-Route::put('updateNaves/{id}','App\Http\Controllers\NavesController@updateNaves');
-
-Route::delete('deleteNaves/{id}','App\Http\Controllers\NavesController@deleteNaves');
-
-//Routes del modelo Personajes
-Route::get('personajes','App\Http\Controllers\PersonajesController@getPersonajes');
-
-Route::get('personajes/{id}','App\Http\Controllers\PersonajesController@getPersonajesxid');
-
-Route::post('addPersonajes','App\Http\Controllers\NavesController@insertPersonajes');
-
-Route::put('updatePersonajes/{id}','App\Http\Controllers\PersonajesController@updatePersonajes');
-
-Route::delete('deletePersonajes/{id}','App\Http\Controllers\PersonajesController@deletePersonajes');

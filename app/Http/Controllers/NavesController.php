@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\naves;
+use App\Models\personajes;
 use Illuminate\Support\Facades\Http;
 
 
@@ -11,45 +12,57 @@ use Illuminate\Support\Facades\Http;
 
 class NavesController extends Controller
 {
-    public function index()
-    {
-        return naves::with('pilots')->get();
-    }
-    
-    public function getNaves(){
-        $response = Http::get('https://swapi.dev/api/starships/');
-        return $response->json();
-    }
 
-    public function getNavesxid($id){
-        $naves = naves::find($id);
-        if (is_null($naves)) {
-            return response()->json(['mensaje'=>'Registro no encontrado'],404);
-        }
-        return response()->json($naves::find($id),200);
-    }
 
-    public function insertNaves(Request $request){
-        $naves = naves::create($request->all());
-        return response($naves,200);
-    }
+public function index(){
+    $starships = naves::with('personajes')->paginate(8);
+    return response()->json($starships);
+}
 
-    public function updateNaves(Request $request,$id){
-        $naves = naves::find($id);
-        if (is_null($naves)) {
-            return response()->json(['mensaje'=>'Registro no encontrado'],404);
-        }
-        $naves->update($request->all());
-        return rsponse($naves,200);
+public function getNaves() {
+    $starships = naves::paginate(8);
+    return response()->json($starships);
+}
+public function destroy($id) {
+    try {
+        $starship = naves::findOrFail($id);
+        $starship->delete();
+        return response()->json(['message' => 'Nave eliminada exitosamente.']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al eliminar la nave: ' . $e->getMessage()], 500);
     }
+}
 
-    public function deleteNves($id){
-        $naves = naves::find($id);
-        if (is_null($naves)) {
-            return response()->json(['mensaje'=>'Registro no encontrado'],404);
-        }
-        $naves->delete();
-        return response()->json(['mensaje'=>'Registro eliminado',200]);
+public function addPilot($id_naves, $id_personajes){
+    try {
+        $starship = naves::findOrFail($id_naves);
+        $pilot = personajes::findOrFail($id_personajes);
+
+        // Vincula al piloto con la nave
+        $starship->personajes()->attach($pilot->id_personajes);
+
+        return response()->json(['message' => 'Piloto vinculado exitosamente.']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+}
+
+public function removePilot($id_naves, $id_personajes){
+    $starship = naves::findOrFail($id_naves);
+    $pilot = personajes::findOrFail($id_personajes);
+    $starship->personajes()->detach($pilot->id_personajes);
+
+    return response()->json(['message' => 'Piloto eliminado exitosamente.']);
+}
+
+public function show($id){
+    $nave = naves::with('personajes')->find($id);
+    if (!$nave) {
+        return response()->json(['message' => 'nave no encontrado'], 404);
+    }
+    return response()->json($nave);
+}
 
 }
+
+
