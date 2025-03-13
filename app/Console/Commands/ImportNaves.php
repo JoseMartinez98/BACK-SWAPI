@@ -18,9 +18,9 @@ class ImportNaves extends Command{
     {
         $this->info("Reseteando base de datos...");
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        nave_personaje::query()->delete();
         naves::truncate();
         personajes::truncate();
-        nave_personaje::truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $this->eliminarImagenes();
         $this->importarNaves();
