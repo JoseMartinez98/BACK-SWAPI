@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('id_personajes'); // Define una clave primaria personalizada
             $table->string('name');
             $table->string('gender');
-            $table->string('url');
+            $table->string('url')->nullable();
         });
     }
 

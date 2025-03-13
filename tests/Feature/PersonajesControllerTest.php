@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class PersonajesControllerTest extends TestCase
 {
-    public function test_index_method()
+    public function test_index_pagination_method()
     {
 
         $response = $this->get('/api/personajes');
