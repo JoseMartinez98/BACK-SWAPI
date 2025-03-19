@@ -12,11 +12,18 @@ use Illuminate\Support\Facades\Http;
 
 class NavesController extends Controller{
 
-    public function index(){
-    //Function used to retrieve the list of all ships with their data and the pilots already linked to the API stored in the database.
-        $starships = naves::with('personajes')->paginate(8);
+    public function index(Request $request){
+        $search = $request->query('search', ''); 
+    
+        $starships = naves::with('personajes')
+                          ->when($search, function ($query, $search) {
+                              return $query->where('name', 'like', '%' . $search . '%'); 
+                          })
+                          ->paginate(8);
+    
         return response()->json($starships);
     }
+    
 
     public function getNaves() {
     //Function used to retrieve the list of all ships with their data
@@ -59,14 +66,6 @@ class NavesController extends Controller{
         return response()->json(['message' => 'Piloto eliminado exitosamente.']);
     }
 
-    public function show($id){
-    //Function used to find a specific ship searching his ID
-        $nave = naves::with('personajes')->find($id);
-        if (!$nave) {
-            return response()->json(['message' => 'nave no encontrado'], 404);
-        }
-        return response()->json($nave);
-    }
 
 }
 

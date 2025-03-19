@@ -17,12 +17,17 @@ class PersonajesController extends Controller{
     }
     
     
-    public function index(){
-    //Function used to get all characters from API saved in database with pagination
-
-        $pilots = personajes::with('naves')->paginate(10); 
+    public function index(Request $request){
+        $search = $request->query('search', ''); 
+            $pilots = personajes::with('naves')
+                            ->when($search, function ($query, $search) {
+                                return $query->where('name', 'like', '%' . $search . '%'); 
+                            })
+                            ->paginate(10);
+        
         return response()->json($pilots);
     }
+    
 
     public function destroy($id){
     //Function used to destroy a character from de database.

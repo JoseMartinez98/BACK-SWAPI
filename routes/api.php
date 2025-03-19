@@ -6,7 +6,6 @@ use App\Http\Controllers\NavesController;
 use App\Http\Controllers\PersonajesController;
 
 // Rutas para las naves
-// Route::get('/naves', [NavesController::class, 'getnaves']); 
 Route::get('/naves', [NavesController::class, 'index']); 
 Route::get('/allNaves', [NavesController::class, 'getNaves']); 
 Route::delete('naves/{id}', [NavesController::class, 'destroy']);
@@ -24,7 +23,6 @@ Route::get('/allPersonajes', [PersonajesController::class, 'getPersonajes']);
 Route::delete('personajes/{id}', [PersonajesController::class, 'destroy']);
 Route::post('/personajes/upload-image', [PersonajesController::class, 'uploadImage']);
 Route::post('/personajes', [PersonajesController::class, 'store']);
-Route::get('/personajes/{id}', [PersonajesController::class, 'show']);
 
 
 
