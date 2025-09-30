@@ -15,9 +15,8 @@ Backend para consumir y exponer datos de la API de Star Wars (SWAPI) como servic
 5. [Configuración](#configuración)
 6. [Uso / Endpoints](#uso--endpoints)
 7. [Pruebas](#pruebas)
-8. [Contribuir](#contribuir)
-9. [Licencia](#licencia)
-10. [Contacto](#contacto)
+8. [Licencia](#licencia)
+9. [Contacto](#contacto)
 
 ---
 
